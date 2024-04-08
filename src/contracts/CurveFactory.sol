@@ -10,6 +10,8 @@ pragma solidity 0.8.22;
 
 import "@openzeppelin/access/Ownable2Step.sol";
 
+import "./Curve.sol";
+
 contract CurveFactory is Ownable2Step {
   constructor() Ownable(msg.sender) {}
 }

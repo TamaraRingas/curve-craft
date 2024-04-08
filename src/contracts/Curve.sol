@@ -9,7 +9,9 @@ pragma solidity 0.8.22;
 \____/  \___/ \/ \_/    \_/   \__/  
 */
 
+import "@openzeppelin/token/ERC20/IERC20.sol";
 import "@openzeppelin/access/Ownable2Step.sol";
+import "@openzeppelin/token/ERC20/utils/SafeERC20.sol"; 
 
 import "../interfaces/ICurveFactory.sol";
 import "../interfaces/ICurve.sol";
@@ -29,14 +31,16 @@ contract Curve is ICurve, Ownable2Step {
     address priceOracle;
     address treasury;
 
-    uint256 public maxThreshold;
-    uint256 public minThreshold;
-    uint256 public timeoutPeriod;
+    uint256 immutable minThreshold;
+    uint256 immutable maxThreshold;
+    uint256 immutable timeoutPeriod;
+
+    uint256 public price;
     uint256 public tokensSold;
     uint256 public percentFee;
-    uint256 public price;
 
     bool public curveActive;
+    bool public transitionConditionsMet;
 
     // =================== MODIFIERS =================== //
 
