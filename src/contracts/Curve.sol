@@ -17,6 +17,13 @@ contract Curve is ICurve, Ownable2Step {
     // =================== STATE VARIABLES =================== //
 
     address public marketTransitionAddress;
+    address transitionContract;
+    address collateralToken;
+    address uniswapRouter;
+    address tokenAddress;
+    address curveFactory;
+    address priceOracle;
+    address treasury;
 
     uint256 public maxThreshold;
     uint256 public minThreshold;
@@ -36,10 +43,31 @@ contract Curve is ICurve, Ownable2Step {
 
     // =================== CONSTRUCTOR =================== //
 
-    constructor (address _marketTransitionAddress) Ownable(msg.sender) {
-        curveActive = true;
+    constructor (
+      address _marketTransitionAddress,
+      address _transitionContract,
+      address _collateralToken,
+      address _uniswapRouter,
+      address _tokenAddress,
+      address _curveFactory,
+      address _priceOracle,
+      address _treasury
+      ) Ownable(msg.sender) {
+        // Set initial storage variables
         marketTransitionAddress =  _marketTransitionAddress;
+        transitionContract = _transitionContract;
+        collateralToken = _collateralToken;
+        uniswapRouter = _uniswapRouter;
+        tokenAddress = _tokenAddress;
+        curveFactory = _curveFactory;
+        priceOracle = _priceOracle;
+        treasury = _treasury;
+
+        // Activate the curve
+        curveActive = true;
     }
+
+    // =================== OWNER FUNCTIONS =================== //
 
     function initializeCurve(uint256 _maxThreshold, uint256 _minThreshold, uint256 _timeoutPeriod) external onlyOwner() {
         maxThreshold = _maxThreshold;
@@ -47,13 +75,11 @@ contract Curve is ICurve, Ownable2Step {
         timeoutPeriod = _timeoutPeriod;
     }
 
-    function activateCurve() external onlyOwner() {
-        curveActive = true;
+    function togglePauseCurve() external onlyOwner() {
+        curveActive = false ? true : false;
     }
-    
-    function pauseCurve() external onlyOwner() {
-        curveActive = false;
-    }
+
+    // =================== EXTERNAL FUNCTIONS =================== //
 
     function sellMISC(uint256 amount) external isActive() {
         //require(amount <= maxThreshold, "Amount exceeds max threshold");
@@ -70,6 +96,8 @@ contract Curve is ICurve, Ownable2Step {
     // function getFee(uint256 _price, uint256 _percentFee) external view returns (uint256) {
     //     return _price * _percentFee / 100;
     // }
+
+    // =================== VIEW FUNCTIONS =================== //
 
     function getMarketTransitionAddress() external view returns (address) {
         return marketTransitionAddress;
