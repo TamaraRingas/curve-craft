@@ -34,11 +34,7 @@ interface ICurve {
 
     function initializeCurve(uint256 _maxThreshold, uint256 _minThreshold, uint256 _timeoutPeriod) external;
 
-    // function getFee(uint256 _price, uint256 _percentFee) external view returns (uint256);
-
-    function getMarketTransitionAddress() external view returns (address);
-
-    function getTokensSold() external view returns (uint256);
+    function getFee(uint256 price) external view returns (uint256);
     
     function sellMISC(uint256 amount) external;
 
