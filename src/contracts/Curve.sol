@@ -25,7 +25,7 @@ contract Curve is ICurve, Ownable2Step {
     address collateralToken;
     address uniswapRouter;
     address tokenAddress;
-    address curveFactory;
+    address curveFactory; // Is this necessary? 
     address priceOracle;
     address treasury;
 
