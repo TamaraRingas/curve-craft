@@ -20,7 +20,7 @@ contract Curve is ICurve {
     uint256 public tokensSold;
     uint256 public percentFee;
     uint256 public price;
-    
+
     bool public curveActive;
 
     address public marketTransitionAddress;
@@ -32,8 +32,9 @@ contract Curve is ICurve {
         _;
     }
 
-    constructor () {
-
+    constructor (address _marketTransitionAddress) {
+        curveActive = true;
+        marketTransitionAddress =  _marketTransitionAddress;
     }
 
     function initializeCurve(uint256 _maxThreshold, uint256 _minThreshold, uint256 _timeoutPeriod) external {
@@ -54,18 +55,16 @@ contract Curve is ICurve {
         return tokensSold;
     }
     
-    function sellMISC(uint256 amount) external {
-        require(curveActive, "Curve is not active");
-        //require(amount <= maxThreshold, "Amount exceeds max threshold");
-        //require(amount >= minThreshold, "Amount is below min threshold");
-        tokensSold += amount;
-    }
-
-    function buyMISC(uint256 amount) external {
-        require(curveActive, "Curve is not active");
+    function sellMISC(uint256 amount) external isActive() {
         //require(amount <= maxThreshold, "Amount exceeds max threshold");
         //require(amount >= minThreshold, "Amount is below min threshold");
         tokensSold -= amount;
+    }
+
+    function buyMISC(uint256 amount) external isActive() {
+        //require(amount <= maxThreshold, "Amount exceeds max threshold");
+        //require(amount >= minThreshold, "Amount is below min threshold");
+        tokensSold += amount;
     }
     
     function activateCurve() external {
