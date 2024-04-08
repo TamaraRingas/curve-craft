@@ -44,6 +44,8 @@ contract Curve is ICurve, Ownable2Step {
     bool public hasTransitioned;
     bool public transitionConditionsMet;
 
+    enum Forumula {Ln, Quadratic, PieceWise}
+
     // =================== MODIFIERS =================== //
 
     modifier isActive() {
