@@ -44,5 +44,5 @@ interface ICurve {
 
     function buyMISC(uint256 amount) external;
     
-    function togglePauseCurve() external; 
+    function toggleCurveActive() external; 
 }

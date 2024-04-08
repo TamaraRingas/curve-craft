@@ -19,15 +19,14 @@ import "../interfaces/ICurve.sol";
 
 contract Curve is ICurve, Ownable2Step {
     using SafeERC20 for IERC20;
-    
+
     // =================== STATE VARIABLES =================== //
 
-    IERC20 collateral;
+    IERC20 USDC;
     ICurveFactory factory;
 
     address public marketTransitionAddress;
     address transitionContract;
-    address collateralToken;
     address uniswapRouter;
     address tokenAddress;
     address curveFactory; // Is this necessary? 
@@ -42,6 +41,7 @@ contract Curve is ICurve, Ownable2Step {
     uint256 public timeoutPeriod;
 
     bool public curveActive;
+    bool public hasTransitioned;
     bool public transitionConditionsMet;
 
     // =================== MODIFIERS =================== //
@@ -71,7 +71,6 @@ contract Curve is ICurve, Ownable2Step {
         // Set initial storage variables
         marketTransitionAddress =  _marketTransitionAddress;
         transitionContract = _transitionContract;
-        collateralToken = _collateralToken;
         uniswapRouter = _uniswapRouter;
         tokenAddress = _tokenAddress;
         curveFactory = _curveFactory;
@@ -79,6 +78,7 @@ contract Curve is ICurve, Ownable2Step {
         treasury = _treasury;
 
         factory = ICurveFactory(curveFactory);
+        USDC = IERC20(_collateralToken);
 
         // Activate the curve
         curveActive = true;
@@ -92,15 +92,14 @@ contract Curve is ICurve, Ownable2Step {
         timeoutPeriod = _timeoutPeriod;
     }
 
-    function togglePauseCurve() external onlyPausers() {
+    function toggleCurveActive() external onlyPausers() {
         curveActive = false ? true : false;
     }
 
     // =================== EXTERNAL FUNCTIONS =================== //
 
     function sellMISC(uint256 amount) external isActive() {
-        //require(amount <= maxThreshold, "Amount exceeds max threshold");
-        //require(amount >= minThreshold, "Amount is below min threshold");
+
         tokensSold -= amount;
     }
 
@@ -108,6 +107,16 @@ contract Curve is ICurve, Ownable2Step {
         //require(amount <= maxThreshold, "Amount exceeds max threshold");
         //require(amount >= minThreshold, "Amount is below min threshold");
         tokensSold += amount;
+    }
+
+    function withdrawCollateral(uint256 _amount) public onlyOwner {
+        require(hasTransitioned, "Curve has not transitioned");
+        if (_amount <= 0) revert NoZeroWithdrawals();
+        if (_amount > USDC.balanceOf(address(this))) revert InsufficientFunds();
+        address owner = owner();
+        USDC.transfer(owner, _amount);
+
+        emit CollateralWithdrawn(owner, _amount);
     }
 
     // function getFee(uint256 _price, uint256 _percentFee) external view returns (uint256) {
