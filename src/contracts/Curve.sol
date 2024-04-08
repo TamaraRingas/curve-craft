@@ -47,18 +47,14 @@ contract Curve is ICurve, Ownable2Step {
         timeoutPeriod = _timeoutPeriod;
     }
 
-    // function getFee(uint256 _price, uint256 _percentFee) external view returns (uint256) {
-    //     return _price * _percentFee / 100;
-    // }
-
-    function getMarketTransitionAddress() external view returns (address) {
-        return marketTransitionAddress;
-    }
-
-    function getTokensSold() external view returns (uint256) {
-        return tokensSold;
+    function activateCurve() external onlyOwner() {
+        curveActive = true;
     }
     
+    function pauseCurve() external onlyOwner() {
+        curveActive = false;
+    }
+
     function sellMISC(uint256 amount) external isActive() {
         //require(amount <= maxThreshold, "Amount exceeds max threshold");
         //require(amount >= minThreshold, "Amount is below min threshold");
@@ -70,12 +66,16 @@ contract Curve is ICurve, Ownable2Step {
         //require(amount >= minThreshold, "Amount is below min threshold");
         tokensSold += amount;
     }
-    
-    function activateCurve() external onlyOwner() {
-        curveActive = true;
+
+    // function getFee(uint256 _price, uint256 _percentFee) external view returns (uint256) {
+    //     return _price * _percentFee / 100;
+    // }
+
+    function getMarketTransitionAddress() external view returns (address) {
+        return marketTransitionAddress;
     }
-    
-    function pauseCurve() external onlyOwner() {
-        curveActive = false;
+
+    function getTokensSold() external view returns (uint256) {
+        return tokensSold;
     }
 }
