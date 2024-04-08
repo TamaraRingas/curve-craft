@@ -9,11 +9,11 @@ pragma solidity 0.8.22;
 \____/  \___/ \/ \_/    \_/   \__/  
 */
 
-import "@openzeppelin/contracts/";
+import "@openzeppelin/access/Ownable2Step.sol";
 
 import "../libraries/ICurve.sol";
 
-contract Curve is ICurve {
+contract Curve is ICurve, Ownable2Step {
     // =================== STATE VARIABLES =================== //
 
     address public marketTransitionAddress;
@@ -36,12 +36,12 @@ contract Curve is ICurve {
 
     // =================== CONSTRUCTOR =================== //
 
-    constructor (address _marketTransitionAddress) {
+    constructor (address _marketTransitionAddress) Ownable(msg.sender) {
         curveActive = true;
         marketTransitionAddress =  _marketTransitionAddress;
     }
 
-    function initializeCurve(uint256 _maxThreshold, uint256 _minThreshold, uint256 _timeoutPeriod) external {
+    function initializeCurve(uint256 _maxThreshold, uint256 _minThreshold, uint256 _timeoutPeriod) external onlyOwner() {
         maxThreshold = _maxThreshold;
         minThreshold = _minThreshold;
         timeoutPeriod = _timeoutPeriod;
@@ -71,11 +71,11 @@ contract Curve is ICurve {
         tokensSold += amount;
     }
     
-    function activateCurve() external {
+    function activateCurve() external onlyOwner() {
         curveActive = true;
     }
     
-    function pauseCurve() external {
+    function pauseCurve() external onlyOwner() {
         curveActive = false;
     }
 }
