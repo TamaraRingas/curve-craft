@@ -11,10 +11,14 @@ pragma solidity 0.8.22;
 
 import "@openzeppelin/access/Ownable2Step.sol";
 
-import "../libraries/ICurve.sol";
+import "../interfaces/ICurveFactory.sol";
+import "../interfaces/ICurve.sol";
+
 
 contract Curve is ICurve, Ownable2Step {
     // =================== STATE VARIABLES =================== //
+
+    ICurveFactory factory;
 
     address public marketTransitionAddress;
     address transitionContract;
@@ -62,6 +66,8 @@ contract Curve is ICurve, Ownable2Step {
         curveFactory = _curveFactory;
         priceOracle = _priceOracle;
         treasury = _treasury;
+
+        factory = ICurveFactory(curveFactory);
 
         // Activate the curve
         curveActive = true;
