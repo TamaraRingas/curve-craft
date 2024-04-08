@@ -18,8 +18,11 @@ import "../interfaces/ICurve.sol";
 
 
 contract Curve is ICurve, Ownable2Step {
+    using SafeERC20 for IERC20;
+    
     // =================== STATE VARIABLES =================== //
 
+    IERC20 collateral;
     ICurveFactory factory;
 
     address public marketTransitionAddress;
