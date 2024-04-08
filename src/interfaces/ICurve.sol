@@ -22,13 +22,12 @@ interface ICurve {
     // =================== ERRORS ====================== //
 
     error Paused();
+    error CannotBuyZero();
+    error CannotSellZero();
     error IncorrectInput();
     error NoZeroWithdrawals();
     error InsufficientFunds();
-    error CannotBuyZero();
-    error CannotSellZero();
     error TokensNotAvailable();
-    error NoMetadex();
     error MaxOneMillionTokensPerTransaction();
 
     // =================== FUNCTIONS =================== //
