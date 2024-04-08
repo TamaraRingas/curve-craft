@@ -16,7 +16,6 @@ import "@openzeppelin/token/ERC20/utils/SafeERC20.sol";
 import "../interfaces/ICurveFactory.sol";
 import "../interfaces/ICurve.sol";
 
-
 contract Curve is ICurve, Ownable2Step {
     using SafeERC20 for IERC20;
 
