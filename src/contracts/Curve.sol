@@ -9,10 +9,14 @@ pragma solidity 0.8.22;
 \____/  \___/ \/ \_/    \_/   \__/  
 */
 
+import "@openzeppelin/contracts/";
+
 import "../libraries/ICurve.sol";
 
 contract Curve is ICurve {
     // =================== STATE VARIABLES =================== //
+
+    address public marketTransitionAddress;
 
     uint256 public maxThreshold;
     uint256 public minThreshold;
@@ -23,14 +27,14 @@ contract Curve is ICurve {
 
     bool public curveActive;
 
-    address public marketTransitionAddress;
-
     // =================== MODIFIERS =================== //
 
     modifier isActive() {
         if (!curveActive) revert Paused();
         _;
     }
+
+    // =================== CONSTRUCTOR =================== //
 
     constructor (address _marketTransitionAddress) {
         curveActive = true;
