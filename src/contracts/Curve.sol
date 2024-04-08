@@ -31,13 +31,12 @@ contract Curve is ICurve, Ownable2Step {
     address priceOracle;
     address treasury;
 
-    uint256 immutable minThreshold;
-    uint256 immutable maxThreshold;
-    uint256 immutable timeoutPeriod;
-
     uint256 public price;
     uint256 public tokensSold;
     uint256 public percentFee;
+    uint256 public minThreshold;
+    uint256 public maxThreshold;
+    uint256 public timeoutPeriod;
 
     bool public curveActive;
     bool public transitionConditionsMet;
@@ -46,6 +45,11 @@ contract Curve is ICurve, Ownable2Step {
 
     modifier isActive() {
         if (!curveActive) revert Paused();
+        _;
+    }
+
+    modifier onlyPausers() {
+        require(msg.sender == owner() || msg.sender == marketTransitionAddress, "Caller is not a pauser");
         _;
     }
 
@@ -85,7 +89,7 @@ contract Curve is ICurve, Ownable2Step {
         timeoutPeriod = _timeoutPeriod;
     }
 
-    function togglePauseCurve() external onlyOwner() {
+    function togglePauseCurve() external onlyPausers() {
         curveActive = false ? true : false;
     }
 
