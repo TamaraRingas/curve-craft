@@ -109,15 +109,15 @@ contract Curve is ICurve, Ownable2Step {
         tokensSold += amount;
     }
 
-    function withdrawCollateral(uint256 _amount) public onlyOwner {
-        require(hasTransitioned, "Curve has not transitioned");
-        if (_amount <= 0) revert NoZeroWithdrawals();
-        if (_amount > USDC.balanceOf(address(this))) revert InsufficientFunds();
-        address owner = owner();
-        USDC.transfer(owner, _amount);
+    // function withdrawCollateral(uint256 _amount) public onlyOwner {
+    //     require(hasTransitioned, "Curve has not transitioned");
+    //     if (_amount <= 0) revert NoZeroWithdrawals();
+    //     if (_amount > USDC.balanceOf(address(this))) revert InsufficientFunds();
+    //     address owner = owner();
+    //     USDC.transfer(owner, _amount);
 
-        emit CollateralWithdrawn(owner, _amount);
-    }
+    //     emit CollateralWithdrawn(owner, _amount);
+    // }
 
     // function getFee(uint256 _price, uint256 _percentFee) external view returns (uint256) {
     //     return _price * _percentFee / 100;
